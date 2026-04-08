@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Realtime Chat Cloud App</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <section class="auth-panel card" id="authPanel">
+      <div class="eyebrow">Serverless Realtime Chat</div>
+      <h1>Build instant messaging with Firebase cloud services.</h1>
+      <p class="intro">
+        Sign in to start 1-to-1 chats, create group rooms, and stream new messages live with Firestore realtime updates.
+      </p>
+
+      <form class="auth-form" id="authForm">
+        <label>
+          <span>Display name</span>
+          <input type="text" id="displayName" placeholder="Ava Sharma" required>
+        </label>
+        <label>
+          <span>Email</span>
+          <input type="email" id="email" placeholder="you@example.com" required>
+        </label>
+        <label>
+          <span>Password</span>
+          <input type="password" id="password" placeholder="Minimum 6 characters" required minlength="6">
+        </label>
+        <div class="auth-actions">
+          <button type="submit" data-mode="signup">Create account</button>
+          <button type="button" class="ghost" id="loginButton">Log in</button>
+        </div>
+      </form>
+
+      <div class="setup-note">
+        Add your Firebase keys in <code>firebase-config.js</code> before running the app.
+      </div>
+      <p class="status" id="authStatus"></p>
+    </section>
+
+    <section class="chat-app hidden" id="chatApp">
+      <aside class="sidebar card">
+        <div class="sidebar-header">
+          <div>
+            <div class="eyebrow">Live inbox</div>
+            <h2>Your chats</h2>
+          </div>
+          <button type="button" class="ghost small" id="logoutButton">Log out</button>
+        </div>
+
+        <div class="user-summary" id="userSummary"></div>
+
+        <form class="composer card-soft" id="directChatForm">
+          <h3>Start 1-to-1 chat</h3>
+          <label>
+            <span>User email</span>
+            <input type="email" id="directEmail" placeholder="friend@example.com" required>
+          </label>
+          <button type="submit">Open direct chat</button>
+        </form>
+
+        <form class="composer card-soft" id="groupChatForm">
+          <h3>Create group chat</h3>
+          <label>
+            <span>Group name</span>
+            <input type="text" id="groupName" placeholder="Project Launch" required>
+          </label>
+          <label>
+            <span>Member emails</span>
+            <textarea id="groupEmails" rows="3" placeholder="alex@example.com, dev@example.com" required></textarea>
+          </label>
+          <button type="submit">Create group</button>
+        </form>
+
+        <div class="chat-list" id="chatList"></div>
+      </aside>
+
+      <main class="conversation card">
+        <div class="conversation-header" id="conversationHeader">
+          <div>
+            <div class="eyebrow">Choose a chat</div>
+            <h2>No conversation selected</h2>
+          </div>
+          <p class="subtle">Messages appear instantly for every member.</p>
+        </div>
+
+        <div class="messages" id="messages">
+          <div class="empty-state">
+            Pick a direct chat or create a group to start sending live messages.
+          </div>
+        </div>
+
+        <form class="message-form" id="messageForm">
+          <input type="text" id="messageInput" placeholder="Type a message..." autocomplete="off" disabled>
+          <button type="submit" id="sendButton" disabled>Send</button>
+        </form>
+        <p class="status" id="appStatus"></p>
+      </main>
+    </section>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
