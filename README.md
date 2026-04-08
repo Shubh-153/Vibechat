@@ -19,7 +19,12 @@ A lightweight cloud chat app with:
 - `index.html` - UI shell
 - `styles.css` - responsive chat UI styling
 - `app.js` - Firebase auth, chat creation, live messages
+<<<<<<< HEAD
 - `firebase-config.js` - Firebase web app config used by the frontend
+=======
+- `firebase-config.local.example.js` - copy this into `firebase-config.local.js` for local use
+- `api/firebase-config.js` - Vercel serverless config endpoint using environment variables
+>>>>>>> origin/main
 - `firestore.rules` - recommended Firestore security rules
 
 ## Firebase setup
@@ -27,7 +32,12 @@ A lightweight cloud chat app with:
 1. Create a Firebase project in the Firebase Console.
 2. Enable **Authentication > Email/Password**.
 3. Create a **Cloud Firestore** database in production or test mode.
+<<<<<<< HEAD
 4. Update `firebase-config.js` with your Firebase web app config.
+=======
+4. Copy `firebase-config.local.example.js` to `firebase-config.local.js`.
+5. Replace the placeholder keys in `firebase-config.local.js` with your real Firebase project config.
+>>>>>>> origin/main
 6. In Firestore, publish the rules from `firestore.rules`.
 
 ## Run locally
@@ -42,9 +52,24 @@ npx serve .
 
 Then open the local URL shown in your terminal.
 
+<<<<<<< HEAD
 ## Deploy on Vercel
 
 This app is a static site, so Vercel can deploy it directly with no build step and no serverless function.
+=======
+## Deploy on Vercel without committing Firebase config
+
+Set these Environment Variables in Vercel for your project:
+
+- `FIREBASE_API_KEY`
+- `FIREBASE_AUTH_DOMAIN`
+- `FIREBASE_PROJECT_ID`
+- `FIREBASE_STORAGE_BUCKET`
+- `FIREBASE_MESSAGING_SENDER_ID`
+- `FIREBASE_APP_ID`
+
+The app will load Firebase config from `api/firebase-config.js` on Vercel, so your repo can stay free of real project values.
+>>>>>>> origin/main
 
 ## Firestore data model
 

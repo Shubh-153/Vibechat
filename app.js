@@ -21,11 +21,14 @@ import {
   orderBy,
   updateDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+<<<<<<< HEAD
 import { firebaseConfig } from "./firebase-config.js";
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+=======
+>>>>>>> origin/main
 
 const authPanel = document.getElementById("authPanel");
 const chatApp = document.getElementById("chatApp");
@@ -55,12 +58,33 @@ let currentUser = null;
 let activeChat = null;
 let chatUnsubscribe = null;
 let messageUnsubscribe = null;
+<<<<<<< HEAD
+=======
+let auth = null;
+let db = null;
+>>>>>>> origin/main
 
 function setStatus(target, message, isError = false) {
   target.textContent = message;
   target.style.color = isError ? "#9f2e2e" : "#715849";
 }
 
+<<<<<<< HEAD
+=======
+async function loadFirebaseConfig() {
+  try {
+    const localConfigModule = await import("./firebase-config.local.js");
+    return localConfigModule.firebaseConfig;
+  } catch (localError) {
+    const response = await fetch("/api/firebase-config");
+    if (!response.ok) {
+      throw new Error("Firebase config could not be loaded. Add firebase-config.local.js for local use or set Vercel env vars.");
+    }
+    return response.json();
+  }
+}
+
+>>>>>>> origin/main
 function normalizeEmail(email) {
   return email.trim().toLowerCase();
 }
@@ -243,7 +267,11 @@ function renderChatList(chatDocs) {
   });
 }
 
+<<<<<<< HEAD
 function renderMessages(chatData, messageDocs) {
+=======
+function renderMessages(chatId, chatData, messageDocs) {
+>>>>>>> origin/main
   const title = chatData.type === "direct"
     ? Object.entries(chatData.memberProfiles || {})
         .filter(([uid]) => uid !== currentUser.uid)
@@ -325,7 +353,11 @@ function bindMessages(chatId) {
       clearConversation();
       return;
     }
+<<<<<<< HEAD
     renderMessages(chatSnapshot.data(), snapshot.docs);
+=======
+    renderMessages(chatId, chatSnapshot.data(), snapshot.docs);
+>>>>>>> origin/main
   }, (error) => {
     setStatus(appStatus, error.message, true);
   });
@@ -333,16 +365,22 @@ function bindMessages(chatId) {
 
 authForm.addEventListener("submit", async (event) => {
   event.preventDefault();
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/main
   const displayName = displayNameInput.value.trim();
   const email = normalizeEmail(emailInput.value);
   const password = passwordInput.value;
 
+<<<<<<< HEAD
   if (!displayName || !email || !password) {
     setStatus(authStatus, "Please fill in all fields.", true);
     return;
   }
 
+=======
+>>>>>>> origin/main
   try {
     const { user } = await createUserWithEmailAndPassword(auth, email, password);
     await saveUserProfile(user, displayName);
@@ -357,11 +395,14 @@ loginButton.addEventListener("click", async () => {
   const email = normalizeEmail(emailInput.value);
   const password = passwordInput.value;
 
+<<<<<<< HEAD
   if (!email || !password) {
     setStatus(authStatus, "Enter email and password to log in.", true);
     return;
   }
 
+=======
+>>>>>>> origin/main
   try {
     await signInWithEmailAndPassword(auth, email, password);
     authForm.reset();
@@ -427,6 +468,7 @@ messageForm.addEventListener("submit", async (event) => {
   }
 });
 
+<<<<<<< HEAD
 onAuthStateChanged(auth, async (user) => {
   currentUser = user;
 
@@ -466,3 +508,57 @@ onAuthStateChanged(auth, async (user) => {
   bindChats(user.uid);
   setStatus(appStatus, "Realtime sync connected.");
 });
+=======
+async function startApp() {
+  try {
+    const firebaseConfig = await loadFirebaseConfig();
+    const app = initializeApp(firebaseConfig);
+    auth = getAuth(app);
+    db = getFirestore(app);
+
+    onAuthStateChanged(auth, async (user) => {
+      currentUser = user;
+
+      if (!user) {
+        showChatApp(false);
+        activeChat = null;
+        if (chatUnsubscribe) {
+          chatUnsubscribe();
+          chatUnsubscribe = null;
+        }
+        if (messageUnsubscribe) {
+          messageUnsubscribe();
+          messageUnsubscribe = null;
+        }
+        clearConversation();
+        chatList.innerHTML = "";
+        return;
+      }
+
+      const userProfileRef = doc(db, "users", user.uid);
+      const profileSnapshot = await getDoc(userProfileRef);
+      const profile = profileSnapshot.data() || {};
+
+      currentUser = {
+        uid: user.uid,
+        email: user.email || profile.email || "",
+        displayName: profile.displayName || user.email?.split("@")[0] || "User"
+      };
+
+      await saveUserProfile(user, currentUser.displayName);
+      showChatApp(true);
+      userSummary.innerHTML = `
+        <strong>${escapeHtml(currentUser.displayName)}</strong><br>
+        <span class="meta">${escapeHtml(currentUser.email)}</span>
+      `;
+      clearConversation();
+      bindChats(user.uid);
+      setStatus(appStatus, "Realtime sync connected.");
+    });
+  } catch (error) {
+    setStatus(authStatus, error.message, true);
+  }
+}
+
+startApp();
+>>>>>>> origin/main
